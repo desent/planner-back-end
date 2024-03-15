@@ -1,14 +1,23 @@
+import { AuthDto } from './../auth/dto/auth.dto';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'src/prisma.service';
+import { hash } from 'argon2';
+
 
 @Injectable()
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(dto: AuthDto) {
+    const user = {
+      email: dto.email,
+      password: await hash(dto.password),
+    };
+
+    return this.prismaService.user.create({
+      data: user
+    });
   }
 
   findAll() {
@@ -18,12 +27,20 @@ export class UserService {
   getById(id: string) {
     return this.prismaService.user.findUnique({
       where: {
-        id
+        id,
       },
       include: {
-        tasks: true
-      }
-    })
+        tasks: true,
+      },
+    });
+  }
+
+  getByEmail(email: string) {
+    return this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {

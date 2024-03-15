@@ -4,6 +4,6 @@ export class AuthDto {
   @IsEmail()
   email: string
 
-  @IsStrongPassword({ minLength:6 })
+  @IsStrongPassword({ minLength: 6 })
   password: string
 }
