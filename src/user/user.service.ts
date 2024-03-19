@@ -1,13 +1,17 @@
 import { AuthDto } from './../auth/dto/auth.dto';
 import { Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import { hash } from 'argon2';
+import { UserDto } from './dto/user.dto';
+import { TaskService } from 'src/task/task.service';
 
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private taskService: TaskService,
+    ) {}
 
   async create(dto: AuthDto) {
     const user = {
@@ -18,10 +22,6 @@ export class UserService {
     return this.prismaService.user.create({
       data: user
     });
-  }
-
-  findAll() {
-    return `This action returns all user`;
   }
 
   getById(id: string) {
@@ -43,11 +43,37 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, dto: UserDto) {
+    let data = dto;
+    if(dto.password) {
+      data = {...dto, password: await hash(dto.password)}
+    }
+
+    return this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async getProfile(id:string) {
+    const profile = await this.getById(id);
+    const totalTasks = profile.tasks.length;
+    const completedTasks = await this.taskService.getCompletedTasksCount(id);
+    const todayTasks = await this.taskService.getTodayTasksCount(id);
+    const weekTasks = await this.taskService.getWeekTasksCount(id);
+
+    const { password, ...rest } = profile;
+
+    return {
+      user: rest,
+      statistics: [
+        { label: 'Total', value: totalTasks },
+        { label: 'Completed tasks', value: completedTasks},
+        { label: 'Today tasks', value: todayTasks },
+        { label: 'Week tasks', value: weekTasks },
+      ]
+    };
   }
 }

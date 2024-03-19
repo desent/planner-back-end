@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, UsePipes, ValidationPipe, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user.dto';
 import { AuthDto } from 'src/auth/dto/auth.dto';
+import { CurrentUser } from 'src/decorators/user.decorator';
+import { Auth } from './../decorators/auth.decorator';
 
 @Controller('user')
 export class UserController {
@@ -13,22 +15,16 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Auth()
+  getProfile(@CurrentUser('id') id: string) {
+    return this.userService.getProfile(id);
   }
 
-  @Get(':id')
-  getById(@Param('id') id: string) {
-    return this.userService.getById(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  @Put()
+  @Auth()
+  update(@CurrentUser('id') id: string, @Body() dto: UserDto) {
+    return this.userService.update(id, dto);
   }
 }
