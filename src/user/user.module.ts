@@ -9,7 +9,6 @@ import { TaskModule } from 'src/task/task.module';
   imports: [TaskModule],
   controllers: [UserController],
   providers: [UserService, PrismaService, TaskService],
-  exports: [UserService]
+  exports: [UserService],
 })
-
 export class UserModule {}

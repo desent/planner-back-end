@@ -5,13 +5,12 @@ import { hash } from 'argon2';
 import { UserDto } from './dto/user.dto';
 import { TaskService } from 'src/task/task.service';
 
-
 @Injectable()
 export class UserService {
   constructor(
     private prismaService: PrismaService,
     private taskService: TaskService,
-    ) {}
+  ) {}
 
   async create(dto: AuthDto) {
     const user = {
@@ -20,7 +19,7 @@ export class UserService {
     };
 
     return this.prismaService.user.create({
-      data: user
+      data: user,
     });
   }
 
@@ -45,8 +44,8 @@ export class UserService {
 
   async update(id: string, dto: UserDto) {
     let data = dto;
-    if(dto.password) {
-      data = {...dto, password: await hash(dto.password)}
+    if (dto.password) {
+      data = { ...dto, password: await hash(dto.password) };
     }
 
     return this.prismaService.user.update({
@@ -57,7 +56,7 @@ export class UserService {
     });
   }
 
-  async getProfile(id:string) {
+  async getProfile(id: string) {
     const profile = await this.getById(id);
     const totalTasks = profile.tasks.length;
     const completedTasks = await this.taskService.getCompletedTasksCount(id);
@@ -70,10 +69,10 @@ export class UserService {
       user: rest,
       statistics: [
         { label: 'Total', value: totalTasks },
-        { label: 'Completed tasks', value: completedTasks},
+        { label: 'Completed tasks', value: completedTasks },
         { label: 'Today tasks', value: todayTasks },
         { label: 'Week tasks', value: weekTasks },
-      ]
+      ],
     };
   }
 }

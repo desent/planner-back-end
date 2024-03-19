@@ -1,4 +1,15 @@
-import { Controller, Delete, Get, Param, Post, Body, Put, UsePipes, ValidationPipe, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  UsePipes,
+  ValidationPipe,
+  HttpCode,
+} from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Auth } from 'src/decorators/auth.decorator';
 import { CurrentUser } from 'src/decorators/user.decorator';
@@ -30,7 +41,7 @@ export class TaskController {
     @Body() dto: TaskDto,
     @Param('id') id: string,
     @CurrentUser('id') userId: string,
-    ) {
+  ) {
     return this.taskService.update(dto, id, userId);
   }
 

@@ -12,8 +12,8 @@ export class TaskService {
       where: {
         userId,
         isCompleted: true,
-      }
-    })
+      },
+    });
   }
 
   async getTodayTasksCount(userId: string) {
@@ -22,10 +22,10 @@ export class TaskService {
       where: {
         userId,
         createdAt: {
-          gte: todayStart.toISOString()
+          gte: todayStart.toISOString(),
         },
-      }
-    })
+      },
+    });
   }
 
   async getWeekTasksCount(userId: string) {
@@ -33,19 +33,19 @@ export class TaskService {
     return this.prismaService.task.count({
       where: {
         userId,
-          createdAt: {
-          gte: weekStart.toISOString()
+        createdAt: {
+          gte: weekStart.toISOString(),
         },
-      }
-    })
+      },
+    });
   }
 
   async getAll(userId: string) {
     return this.prismaService.task.findMany({
       where: {
-        userId
-      }
-    })
+        userId,
+      },
+    });
   }
 
   async create(dto: TaskDto, userId: string) {
@@ -54,28 +54,28 @@ export class TaskService {
         ...dto,
         user: {
           connect: {
-            id: userId
+            id: userId,
           },
         },
       },
-    })
+    });
   }
 
-  async update(dto: Partial<TaskDto>, taskId:string, userId: string) {
+  async update(dto: Partial<TaskDto>, taskId: string, userId: string) {
     return this.prismaService.task.update({
       where: {
         userId,
-        id: taskId
+        id: taskId,
       },
       data: dto,
-    })
+    });
   }
 
-  async delete(taskId:string) {
+  async delete(taskId: string) {
     return this.prismaService.task.delete({
       where: {
-        id: taskId
-      }
-    })
+        id: taskId,
+      },
+    });
   }
 }
