@@ -21,6 +21,7 @@ export class AuthService {
   REFRESH_TOKEN_NAME = 'refreshToken';
 
   async login(dto: AuthDto) {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { password, ...user } = await this.validateUser(dto);
     const tokens = this.issueTokens(user.id);
 
@@ -34,7 +35,7 @@ export class AuthService {
     const isUserExists = await this.userService.getByEmail(dto.email);
 
     if (isUserExists) throw new BadRequestException('User already exists');
-
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { password, ...user } = await this.userService.create(dto);
 
     const tokens = this.issueTokens(user.id);
@@ -49,7 +50,7 @@ export class AuthService {
     const result = await this.jwtService.verifyAsync(refreshToken);
 
     if (!result) throw new UnauthorizedException('Invalid refresh token');
-
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { password, ...user } = await this.userService.getById(result.id);
     const tokens = this.issueTokens(user.id);
 

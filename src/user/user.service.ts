@@ -62,7 +62,7 @@ export class UserService {
     const completedTasks = await this.taskService.getCompletedTasksCount(id);
     const todayTasks = await this.taskService.getTodayTasksCount(id);
     const weekTasks = await this.taskService.getWeekTasksCount(id);
-
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const { password, ...rest } = profile;
 
     return {
