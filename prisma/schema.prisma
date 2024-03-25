@@ -54,7 +54,7 @@ model TimeBlock {
 
   name String
   color String?
-  duraation Int
+  duration Int
   order Int @default(1)
 
   user User @relation(fields: [userId], references: [id])
