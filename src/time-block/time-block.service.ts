@@ -12,10 +12,10 @@ export class TimeBlockService {
         userId,
       },
       orderBy: {
-        order: 'asc'
+        order: 'asc',
       },
     });
-  };
+  }
 
   async create(dto: TimeBlockDto, userId: string) {
     return this.prismaService.timeBlock.create({
@@ -26,17 +26,21 @@ export class TimeBlockService {
             id: userId,
           },
         },
-      }
+      },
     });
-  };
+  }
 
-    async update(dto: Partial<TimeBlockDto>, timeBlockId: string, userId: string) {
-      return this.prismaService.timeBlock.update({
-        where: {
-          userId,
-          id: timeBlockId,
-        },
-        data: dto,
+  async update(
+    dto: Partial<TimeBlockDto>,
+    timeBlockId: string,
+    userId: string,
+  ) {
+    return this.prismaService.timeBlock.update({
+      where: {
+        userId,
+        id: timeBlockId,
+      },
+      data: dto,
     });
   }
 
@@ -45,13 +49,13 @@ export class TimeBlockService {
       ids.map((id, order) =>
         this.prismaService.timeBlock.update({
           where: { id },
-          data: { order }
-        })
-      )
+          data: { order },
+        }),
+      ),
     );
-  };
+  }
 
-    async delete(timeBlockId: string) {
+  async delete(timeBlockId: string) {
     return this.prismaService.timeBlock.delete({
       where: {
         id: timeBlockId,
