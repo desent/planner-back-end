@@ -29,7 +29,7 @@ export class PomodoroController {
   @HttpCode(200)
   @Post()
   @Auth()
-  async createPomodoroTimer(@CurrentUser('id') userId: string,) {
+  async createPomodoroTimer(@CurrentUser('id') userId: string) {
     return this.pomodoroService.create(userId);
   }
 
