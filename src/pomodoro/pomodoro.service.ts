@@ -23,7 +23,7 @@ export class PomodoroService {
       include: {
         rounds: {
           orderBy: {
-            id: 'desc',
+            id: 'asc',
           },
         },
       },
@@ -38,7 +38,7 @@ export class PomodoroService {
     const { intervalsCount } =
       await this.userService.getUserIntervalCount(userId);
 
-    if (intervalsCount) throw new NotFoundException('User not found');
+    if (!intervalsCount) throw new NotFoundException('User not found');
 
     return this.prismaService.pomodoroSession.create({
       data: {

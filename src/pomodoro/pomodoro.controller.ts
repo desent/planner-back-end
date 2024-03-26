@@ -8,20 +8,29 @@ import {
   ValidationPipe,
   HttpCode,
   Param,
+  Post,
 } from '@nestjs/common';
 import { PomodoroService } from './pomodoro.service';
 import { Auth } from './../decorators/auth.decorator';
 import { CurrentUser } from 'src/decorators/user.decorator';
 import { PomodoroRoundDto, PomodoroSessionDto } from './dto/pomodoro.dto';
 
-@Controller('pomodoro')
+@Controller('user/timer')
 export class PomodoroController {
   constructor(private readonly pomodoroService: PomodoroService) {}
 
-  @Get()
+  @Get('today')
   @Auth()
   getTodaySession(@CurrentUser('id') id: string) {
     return this.pomodoroService.getTodaySession(id);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  @Post()
+  @Auth()
+  async createPomodoroTimer(@CurrentUser('id') userId: string,) {
+    return this.pomodoroService.create(userId);
   }
 
   @UsePipes(new ValidationPipe())
